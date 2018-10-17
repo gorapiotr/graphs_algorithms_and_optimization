@@ -1,12 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Spike_1 = require("./Spike");
+const Line_1 = require("./Line");
 class Shape {
     constructor(points) {
         this.spikes = Array();
         this.points = points;
         this.getPointsOrientation();
         this.getSpikes();
+        this.test = points;
     }
     // get orientation
     getPointsOrientation() {
@@ -128,6 +130,45 @@ class Shape {
     }
     compareSpike() {
         return this.getMinTopSpike().point.y >= this.getMaxBottomSpike().point.y ? true : false;
+    }
+    //find kernel circuit
+    findKernelCircuit() {
+        if (this.compareSpike()) {
+            this.points.forEach((point, index) => {
+                let newPoint = this.checkPoint(point, index);
+                if (newPoint != null) {
+                    console.log(newPoint);
+                }
+            });
+        }
+    }
+    checkPoint(point, index) {
+        let topSpike = this.getMinTopSpike();
+        let bottomSpike = this.getMaxBottomSpike();
+        if (index != 0) {
+            if (point.y < bottomSpike.point.y &&
+                this.points[index - 1].y > bottomSpike.point.y) {
+                return this.newPoint(bottomSpike, point, index);
+            }
+            if (point.y > bottomSpike.point.y &&
+                this.points[index - 1].y < bottomSpike.point.y) {
+                return this.newPoint(bottomSpike, point, index);
+            }
+            if (point.y > topSpike.point.y &&
+                this.points[index - 1].y < topSpike.point.y) {
+                return this.newPoint(topSpike, point, index);
+            }
+            if (point.y < topSpike.point.y &&
+                this.points[index - 1].y > topSpike.point.y) {
+                return this.newPoint(topSpike, point, index);
+            }
+            return null;
+        }
+    }
+    newPoint(spike, point, index) {
+        let line = new Line_1.Line();
+        line.computeLine(point, this.points[index - 1]);
+        return line.crossPoint(spike.point.y);
     }
 }
 exports.Shape = Shape;

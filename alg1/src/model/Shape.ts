@@ -1,15 +1,21 @@
 import {Point} from "./Point";
 import {Spike, Direction} from "./Spike";
+import {Line} from "./Line";
+import {Polygon} from "./Polygon";
+import tryConvertScriptKindName = ts.server.tryConvertScriptKindName;
 
 export class Shape {
 
     public points: Point[];
     public spikes: Spike[] = Array<Spike>();
+    public test: Point[];
 
     constructor(points: Point[]) {
         this.points = points;
         this.getPointsOrientation();
         this.getSpikes();
+        this.test = points;
+
     }
 
     // get orientation
@@ -154,4 +160,55 @@ export class Shape {
     public compareSpike() {
         return this.getMinTopSpike().point.y >= this.getMaxBottomSpike().point.y ? true : false;
     }
+
+    //find kernel circuit
+    public findKernelCircuit() {
+
+        if (this.compareSpike()) {
+            this.points.forEach((point: Point, index: number) => {
+               let newPoint = this.checkPoint(point, index);
+                    if(newPoint != null) {
+                        console.log(newPoint);
+                    }
+            });
+        }
+    }
+
+    public checkPoint(point: Point, index: number) {
+        let topSpike = this.getMinTopSpike();
+        let bottomSpike = this.getMaxBottomSpike();
+
+        if (index != 0) {
+            if (point.y < bottomSpike.point.y &&
+                this.points[index - 1].y > bottomSpike.point.y
+            ) {
+                return this.newPoint(bottomSpike, point, index);
+            }
+
+            if (point.y > bottomSpike.point.y &&
+                this.points[index - 1].y < bottomSpike.point.y
+            ) {
+                return this.newPoint(bottomSpike, point, index);
+            }
+
+            if (point.y > topSpike.point.y &&
+                this.points[index - 1].y < topSpike.point.y
+            ) {
+                return this.newPoint(topSpike, point, index);
+            }
+
+            if (point.y < topSpike.point.y &&
+                this.points[index - 1].y > topSpike.point.y
+            ) {
+                return this.newPoint(topSpike, point, index);
+            }
+            return null;
+        }
+    }
+
+    public newPoint(spike: Spike, point: Point, index: number) {
+            let line = new Line();
+            line.computeLine(point, this.points[index-1]);
+                return line.crossPoint(spike.point.y);
+        }
 }

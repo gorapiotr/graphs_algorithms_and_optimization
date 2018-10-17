@@ -1,5 +1,6 @@
 import { Point } from "./model/Point";
 import { Polygon } from "./model/Polygon";
+import {Line} from "./model/Line";
 
 console.log("START PROGRAM");
 
@@ -36,16 +37,35 @@ let points3: Point[] = [
     new Point(6,1,6),
 ];
 
+let points4: Point[] = [
+    new Point(1,3,2),
+    new Point(2,5,1),
+    new Point(3,5,6),
+    new Point(4,3,5),
+    new Point(5,1,6),
+    new Point(6,1,1),
+]
+]
 
 
-let polygon = new Polygon(points3);
+//polygon
+let polygon = new Polygon(points4);
 
-//polygon.getPointsOrientation();
-
-//console.log(polygon);
-
-//polygon.getSpikes();
-//console.log(polygon.spikes);
 console.log(polygon.getMinTopSpike());
 console.log(polygon.getMaxBottomSpike());
 console.log(polygon.kernelExist());
+
+//line
+let topLine = new Line();
+    topLine.a = 0;
+    topLine.b = polygon.getMinTopSpike().point.y;
+
+let bottomLine = new Line();
+    topLine.a = 0;
+    topLine.b = polygon.getMaxBottomSpike().point.y;
+
+polygon.findKernelCircuit();
+// line.computeLine(new Point(1,10,4), new Point(2,10,9));
+// console.log(line);
+// console.log(line.crossPoint(7));
+//console.log(polygon.points);
