@@ -1,8 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-class Polygon {
+const Shape_1 = require("./Shape");
+class Polygon extends Shape_1.Shape {
     constructor(points) {
-        this.points = points;
+        super(points);
     }
 }
 exports.Polygon = Polygon;
