@@ -133,9 +133,15 @@ export class Shape {
             return spike.position == Direction.bottom;
         });
 
-        return bottomSpike.reduce(function (prev, current) {
-            return (prev.point.y > current.point.y) ? prev : current
-        });
+        if (bottomSpike.length > 0) {
+            return bottomSpike.reduce(function (prev, current) {
+                return (prev.point.y > current.point.y) ? prev : current
+            });
+        } else {
+            let points: Point[] = Object.create(this.points);
+            points.sort((a, b) => a.y - b.y);
+            return new Spike(points[0], Direction.bottom);
+        }
     }
 
     //min top spike
@@ -144,9 +150,15 @@ export class Shape {
             return spike.position == Direction.top;
         });
 
-        return bottomSpike.reduce(function (prev, current) {
-            return (prev.point.y < current.point.y) ? prev : current
-        });
+        if (bottomSpike.length > 0) {
+            return bottomSpike.reduce(function (prev, current) {
+                return (prev.point.y < current.point.y) ? prev : current
+            });
+        } else {
+            let points: Point[] = Object.create(this.points);
+            points.sort((a, b) => b.y - a.y);
+            return new Spike(points[0], Direction.top);
+        }
     }
 
     //check kernel exist
@@ -166,12 +178,12 @@ export class Shape {
 
         if (this.compareSpike()) {
             this.points.forEach((point: Point, index: number) => {
-               let newPoint = this.checkPoint(point, index);
-                    if(newPoint != null) {
-                        console.log(newPoint);
-                    }
+                this.checkPoint(point, index);
             });
         }
+        this.sortClockWeise();
+        this.removeNotCircuitPoints();
+        return this.computeCircuit();
     }
 
     public checkPoint(point: Point, index: number) {
@@ -182,33 +194,126 @@ export class Shape {
             if (point.y < bottomSpike.point.y &&
                 this.points[index - 1].y > bottomSpike.point.y
             ) {
-                return this.newPoint(bottomSpike, point, index);
+                this.newPoint(bottomSpike, point, index);
             }
 
             if (point.y > bottomSpike.point.y &&
                 this.points[index - 1].y < bottomSpike.point.y
             ) {
-                return this.newPoint(bottomSpike, point, index);
+                this.newPoint(bottomSpike, point, index);
             }
 
             if (point.y > topSpike.point.y &&
                 this.points[index - 1].y < topSpike.point.y
             ) {
-                return this.newPoint(topSpike, point, index);
+                this.newPoint(topSpike, point, index);
             }
 
             if (point.y < topSpike.point.y &&
                 this.points[index - 1].y > topSpike.point.y
             ) {
-                return this.newPoint(topSpike, point, index);
+                this.newPoint(topSpike, point, index);
             }
-            return null;
+            ;
         }
     }
 
     public newPoint(spike: Spike, point: Point, index: number) {
-            let line = new Line();
-            line.computeLine(point, this.points[index-1]);
-                return line.crossPoint(spike.point.y);
+        let line = new Line();
+        line.computeLine(point, this.points[index - 1]);
+        let newPoint = line.crossPoint(spike.point.y);
+        this.points.push(newPoint);
+    }
+
+    public sortClockWeise() {
+        // Find min max to get center
+        // Sort from top to bottom
+        this.points.sort((a, b) => a.y - b.y);
+
+        // Get center y
+        const cy = (this.points[0].y + this.points[this.points.length - 1].y) / 2;
+
+        // Sort from right to left
+        this.points.sort((a, b) => b.x - a.x);
+
+        // Get center x
+        const cx = (this.points[0].x + this.points[this.points.length - 1].x) / 2;
+
+        // Center point
+        const center = {x: cx, y: cy};
+        let startAng: any;
+
+        this.points.forEach(point => {
+            let ang = Math.atan2(point.y - center.y, point.x - center.x);
+            if (!startAng) {
+                startAng = ang
+            }
+            else {
+                if (ang < startAng) {  // ensure that all points are clockwise of the start point
+                    ang += Math.PI * 2;
+                }
+            }
+            point.angle = ang; // add the angle to the point
+        });
+        this.points.sort((a, b) => a.angle - b.angle);
+    }
+
+
+    public removeNotCircuitPoints() {
+
+        if (this.getMaxBottomSpike()) {
+            this.points = this.points.filter((point) => {
+                return point.y >= this.getMaxBottomSpike().point.y;
+            });
         }
+
+        if (this.getMinTopSpike()) {
+            this.points = this.points.filter((point) => {
+                return point.y <= this.getMinTopSpike().point.y;
+            });
+        }
+
+    }
+
+    public computeCircuit() {
+        let circuit = 0;
+        this.points.forEach((point, index) => {
+            if (index != 0) {
+                circuit = circuit + Math.sqrt(Math.pow((point.x - this.points[index - 1].x), 2) + Math.pow((point.y - this.points[index - 1].y), 2));
+            }
+            if (index == this.points.length - 1) {
+                circuit = circuit + Math.sqrt(Math.pow((point.x - this.points[0].x), 2) + Math.pow((point.y - this.points[0].y), 2));
+            }
+        });
+        return circuit;
+    }
+
+    public computeArea() {
+        let areaPoints: Point[] = [];
+        let area = 0;
+        this.points.forEach((p, index) => {
+            if (index == 0) {
+                let x = this.points[index + 1].x - this.points[this.points.length - 1].x;
+                let point = new Point(0, x, p.y);
+                areaPoints.push(point);
+            }
+            if (index !== 0 && index !== this.points.length - 1) {
+                let x = this.points[index + 1].x - this.points[index - 1].x;
+                let point = new Point(0, x, p.y);
+                areaPoints.push(point);
+            }
+            if (index == this.points.length - 1) {
+                let x = this.points[0].x - this.points[index - 1].x;
+                let point = new Point(0, x, p.y);
+                areaPoints.push(point);
+            }
+        });
+
+        areaPoints.forEach((p) => {
+            area = area + p.x * p.y;
+        });
+
+        return area = Math.abs(area / 2);
+    }
+
 }

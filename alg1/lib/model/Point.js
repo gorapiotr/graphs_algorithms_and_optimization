@@ -6,6 +6,7 @@ class Point {
         this.x = x;
         this.y = y;
         this.orientation = undefined;
+        this.angle = undefined;
     }
 }
 exports.Point = Point;
