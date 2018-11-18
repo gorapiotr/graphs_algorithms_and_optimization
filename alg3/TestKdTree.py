@@ -56,25 +56,7 @@ class TestKdTree(unittest.TestCase):
 
         node = KdTree.kd_build(s)
 
-        TestKdTree.displayTree(node)
-
-    @staticmethod
-    def displayTree(node):
-
-        if node.d == 1:
-            print(node.straight)
-
-        if isinstance(node.right_child, Node):
-            print(vars(node.right_child))
-            TestKdTree.displayTree(node.right_child)
-        else:
-            print(node.right_child)
-
-        if isinstance(node.left_child, Node):
-            print(vars(node.left_child))
-            TestKdTree.displayTree(node.left_child)
-        else:
-            print(node.left_child)
+        KdTree.display_tree(node)
 
 
 if __name__ == '__main__':

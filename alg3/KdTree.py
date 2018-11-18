@@ -73,3 +73,21 @@ class KdTree:
                 else:
                     s2.append(point)
         return s1, s2
+
+    @staticmethod
+    def display_tree(node):
+
+        if node.d == 1:
+            print(vars(node))
+
+        if isinstance(node.right_child, Node):
+            print(vars(node.right_child))
+            __class__.display_tree(node.right_child)
+        else:
+            print(node.right_child)
+
+        if isinstance(node.left_child, Node):
+            print(vars(node.left_child))
+            __class__.display_tree(node.left_child)
+        else:
+            print(node.left_child)
