@@ -9,7 +9,7 @@ class Shape {
         this.points = points;
         this.getPointsOrientation();
         this.getSpikes();
-        this.test = points;
+        //this.test = points;
     }
     // get orientation
     getPointsOrientation() {
@@ -258,7 +258,7 @@ class Shape {
             }
         });
         areaPoints.forEach((p) => {
-            area = area + p.x * p.y;
+            area += p.x * p.y;
         });
         return area = Math.abs(area / 2);
     }

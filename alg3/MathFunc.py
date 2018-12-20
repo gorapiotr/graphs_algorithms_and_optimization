@@ -9,8 +9,6 @@ class MathFunc(object):
         4.0
         """
 
-        MathFunc.bubble_sort(data)
-
         n = len(data)
         if n == 0:
             return None
@@ -21,7 +19,7 @@ class MathFunc(object):
             return (data[i - 1] + data[i]) / 2
 
     @staticmethod
-    def bubble_sort(list):
+    def sort(list):
 
         # Swap the elements to arrange in order
         for iter_num in range(len(list) - 1, 0, -1):

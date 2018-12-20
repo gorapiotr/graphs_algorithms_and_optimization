@@ -3,8 +3,6 @@ import unittest
 from KdTree import KdTree
 from MathFunc import MathFunc
 
-from Node import Node
-
 
 class TestKdTree(unittest.TestCase):
 
@@ -16,20 +14,20 @@ class TestKdTree(unittest.TestCase):
     def test_get_point_vector_function(self):
         s = [
             [1, 1],
-            [1, 2],
+            [2, 2],
             [3, 2],
             [4, 3]
         ]
 
         x_points, y_points = KdTree.get_points_vector(s)
 
-        self.assertEqual([1, 1, 3, 4], x_points)
+        self.assertEqual([1, 2, 3, 4], x_points)
         self.assertEqual([1, 2, 2, 3], y_points)
 
     def test_divide_array_function(self):
         s = [
             [1, 1],
-            [1, 2],
+            [2, 2],
             [3, 2],
             [4, 3]
         ]
@@ -38,12 +36,12 @@ class TestKdTree(unittest.TestCase):
 
         s1, s2 = KdTree.divide_array(s, MathFunc.median(x_points), 'x')
 
-        self.assertEqual([[1, 1], [1, 2]], s1)
+        self.assertEqual([[1, 1], [2, 2]], s1)
         self.assertEqual([[3, 2], [4, 3]], s2)
 
         s1, s2 = KdTree.divide_array(s, MathFunc.median(x_points), 'y')
 
-        self.assertEqual([[1, 1], [1, 2], [3, 2]], s1)
+        self.assertEqual([[1, 1], [2, 2], [3, 2]], s1)
         self.assertEqual([[4, 3]], s2)
 
     def test_run_alg(self):
@@ -52,6 +50,19 @@ class TestKdTree(unittest.TestCase):
             [2, 2],
             [3, 2],
             [4, 3]
+        ]
+
+        node = KdTree.kd_build(s)
+
+        KdTree.display_tree(node)
+
+    def test_run_alg1(self):
+        s = [
+            [1, 1],
+            [2, 2],
+            [3, 6],
+            [4, 3],
+            [5, 7]
         ]
 
         node = KdTree.kd_build(s)

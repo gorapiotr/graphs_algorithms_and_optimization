@@ -4,7 +4,8 @@ import math
 
 
 def chunks(l, n):
-    for i in range(0, len(l), n):
+    length = len(l)
+    for i in range(0, length , n):
         yield l[i:i + n]
 
 

@@ -15,7 +15,7 @@ class SelectionTest(unittest.TestCase):
 
         i = 1
         while i < len(a) - 1:
-            print('Selection alg :', selection(a, i), 'Sorted list: ', b[i - 1])
+            print('Iteration: ', i, 'Selection alg :', selection(a, i), 'Sorted list: ', b[i - 1])
             self.assertEqual(selection(a, i), b[i - 1])
             i = i + 1
 
@@ -27,7 +27,7 @@ class SelectionTest(unittest.TestCase):
 
         i = 1
         while i < len(a) - 1:
-            print('Selection alg :', selection(a, i), 'Sorted list: ', b[i - 1])
+            print('Iteration: ', i, 'Selection alg :', selection(a, i), 'Sorted list: ', b[i - 1])
             self.assertEqual(selection(a, i), b[i - 1])
             i = i + 1
 

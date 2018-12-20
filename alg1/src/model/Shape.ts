@@ -1,8 +1,6 @@
 import {Point} from "./Point";
 import {Spike, Direction} from "./Spike";
 import {Line} from "./Line";
-import {Polygon} from "./Polygon";
-import tryConvertScriptKindName = ts.server.tryConvertScriptKindName;
 
 export class Shape {
 
@@ -14,7 +12,7 @@ export class Shape {
         this.points = points;
         this.getPointsOrientation();
         this.getSpikes();
-        this.test = points;
+        //this.test = points;
 
     }
 
@@ -291,6 +289,7 @@ export class Shape {
     public computeArea() {
         let areaPoints: Point[] = [];
         let area = 0;
+
         this.points.forEach((p, index) => {
             if (index == 0) {
                 let x = this.points[index + 1].x - this.points[this.points.length - 1].x;
@@ -310,7 +309,7 @@ export class Shape {
         });
 
         areaPoints.forEach((p) => {
-            area = area + p.x * p.y;
+            area += p.x * p.y;
         });
 
         return area = Math.abs(area / 2);

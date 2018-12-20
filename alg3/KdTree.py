@@ -31,14 +31,16 @@ class KdTree:
 
         if len(s) % 2 == 0:
             x_points, y_points = KdTree.get_points_vector(s)
+            MathFunc.sort(x_points)
             x_median = MathFunc.median(x_points)
-            straight = {"y": x_median}
+            straight = {"x": x_median}
 
             s1, s2 = KdTree.divide_array(s, x_median, 'x')
         else:
             x_points, y_points = KdTree.get_points_vector(s)
+            MathFunc.sort(y_points)
             y_median = MathFunc.median(y_points)
-            straight = {"x": y_median}
+            straight = {"y": y_median}
 
             s1, s2 = KdTree.divide_array(s, y_median, 'y')
 
@@ -62,13 +64,13 @@ class KdTree:
         s2 = []
         if x_y == 'x':
             for point in s:
-                if point[0] >= median:
+                if point[0] <= median:
                     s1.append(point)
                 else:
                     s2.append(point)
         if x_y == 'y':
             for point in s:
-                if point[1] >= median:
+                if point[1] <= median:
                     s1.append(point)
                 else:
                     s2.append(point)
@@ -79,15 +81,21 @@ class KdTree:
 
         if node.d == 1:
             print(vars(node))
-
-        if isinstance(node.right_child, Node):
-            print(vars(node.right_child))
-            __class__.display_tree(node.right_child)
-        else:
-            print(node.right_child)
+            print('\n')
 
         if isinstance(node.left_child, Node):
             print(vars(node.left_child))
+            print('\n')
             __class__.display_tree(node.left_child)
         else:
             print(node.left_child)
+            print('\n')
+
+        if isinstance(node.right_child, Node):
+            print(vars(node.right_child))
+            print('\n')
+            __class__.display_tree(node.right_child)
+        else:
+            print(node.right_child)
+            print('\n')
+
