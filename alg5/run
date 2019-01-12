@@ -1,0 +1,6 @@
+#!/bin/bash
+
+tsc --outDir ./lib
+chmod -R +rw lib
+clear
+node lib/main.js

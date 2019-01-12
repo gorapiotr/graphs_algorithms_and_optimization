@@ -1,0 +1,19 @@
+{
+  "name": "alg5",
+  "version": "1.0.0",
+  "description": "travelling salesman problem",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -r ts-node/register test/**/*.spec.ts"
+  },
+  "dependencies": {
+    "typescript": "^3.1.3",
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.5",
+    "ts-node": "^7.0.1",
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0"
+  },
+  "author": "piotr gora",
+  "license": "ISC"
+}
